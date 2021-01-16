@@ -30883,7 +30883,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("v-footer", { staticClass: "adminFooter orange lighten-4" }, [
-    _c("div", { staticClass: "adminFooterTexte" }, [_vm._v("© Apiculturepei")])
+    _c("div", { staticClass: "adminFooterTexte" }, [_vm._v("© mielpei")])
   ])
 }
 var staticRenderFns = []

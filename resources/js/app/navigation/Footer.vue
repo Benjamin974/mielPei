@@ -1,6 +1,6 @@
 <template>
 	<v-footer class="adminFooter orange lighten-4">
-		<div class="adminFooterTexte">© Apiculturepei</div>
+		<div class="adminFooterTexte">© mielpei</div>
 	</v-footer>
 </template>
 
