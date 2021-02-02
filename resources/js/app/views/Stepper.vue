@@ -53,99 +53,123 @@
 
 				<v-stepper-content step="2" class="mb-5">
 					<v-container>
-						<div>
-							<h3>Adresse de livraison</h3>
-							<v-row>
-								<v-text-field
-									v-model="commande.livraison.name"
-									class="pa-2"
-									md="4"
-									label="nom"
-								></v-text-field>
-								<v-text-field
-									v-model="commande.livraison.pays"
-									class="pa-2"
-									md="4"
-									label="pays"
-								></v-text-field>
-							</v-row>
-							<v-row>
-								<v-text-field
-									v-model="commande.livraison.ville"
-									class="pa-2"
-									md="4"
-									label="ville"
-								></v-text-field>
-								<v-text-field
-									v-model="commande.livraison.address"
-									class="pa-2"
-									md="4"
-									label="adresse"
-								></v-text-field>
-								<v-text-field
-									v-model="commande.livraison.postal_code"
-									class="pa-2"
-									md="4"
-									label="code postal"
-								></v-text-field>
-							</v-row>
-						</div>
-						<v-switch v-model="selectable" label="Selectable"></v-switch>
-						<div v-if="selectable">
-							<h3>Adresse de facturation</h3>
-							<v-row>
-								<v-text-field
-									v-model="commande.facturation.name"
-									class="pa-2"
-									md="4"
-									label="nom"
-								></v-text-field>
-								<v-text-field
-									v-model="commande.facturation.pays"
-									class="pa-2"
-									md="4"
-									label="pays"
-								></v-text-field>
-							</v-row>
-							<v-row>
-								<v-text-field
-									v-model="commande.facturation.ville"
-									class="pa-2"
-									md="4"
-									label="ville"
-								></v-text-field>
-								<v-text-field
-									v-model="commande.facturation.address"
-									class="pa-2"
-									md="4"
-									label="adresse"
-								></v-text-field>
-								<v-text-field
-									v-model="commande.facturation.postal_code"
-									class="pa-2"
-									md="4"
-									label="code postal"
-								></v-text-field>
-							</v-row>
-						</div>
+						<v-form ref="form" v-model="valid" :lazy-validation="lazy">
+							<div>
+								<h3>Adresse de livraison</h3>
+								<v-row>
+									<v-text-field
+										v-model="commande.livraison.name"
+										class="pa-2"
+										md="4"
+										label="nom"
+										required
+										:rules='[(v) => !!v || "champs requis"]'
+									></v-text-field>
+									<v-text-field
+										v-model="commande.livraison.pays"
+										class="pa-2"
+										md="4"
+										label="pays"
+										required
+										:rules='[(v) => !!v || "champs requis"]'
+									></v-text-field>
+								</v-row>
+								<v-row>
+									<v-text-field
+										v-model="commande.livraison.ville"
+										class="pa-2"
+										md="4"
+										label="ville"
+										:rules='[(v) => !!v || "champs requis"]'
+										required
+									></v-text-field>
+									<v-text-field
+										v-model="commande.livraison.address"
+										class="pa-2"
+										md="4"
+										label="adresse"
+										:rules='[(v) => !!v || "champs requis"]'
+										required
+									></v-text-field>
+									<v-text-field
+										v-model="commande.livraison.postal_code"
+										class="pa-2"
+										type='number'
+										md="4"
+										label="code postal"
+										:rules='[rulesCP]'
+										required
+									></v-text-field>
+								</v-row>
+							</div>
+							<v-switch v-model="selectable" label="Selectable"></v-switch>
+							<div v-if="selectable">
+								<h3>Adresse de facturation</h3>
+								<v-row>
+									<v-text-field
+										v-model="commande.facturation.name"
+										class="pa-2"
+										md="4"
+										label="nom"
+										:rules='[(v) => !!v || "champs requis"]'
+										required
+									></v-text-field>
+									<v-text-field
+										v-model="commande.facturation.pays"
+										class="pa-2"
+										md="4"
+										label="pays"
+										:rules='[(v) => !!v || "champs requis"]'
+										required
+									></v-text-field>
+								</v-row>
+								<v-row>
+									<v-text-field
+										v-model="commande.facturation.ville"
+										class="pa-2"
+										md="4"
+										label="ville"
+										:rules='[(v) => !!v || "champs requis"]'
+										required
+									></v-text-field>
+									<v-text-field
+										v-model="commande.facturation.address"
+										class="pa-2"
+										md="4"
+										label="adresse"
+										:rules='[(v) => !!v || "champs requis"]'
+										required
+									></v-text-field>
+									<v-text-field
+										v-model="commande.facturation.postal_code"
+										class="pa-2"
+										md="4"
+										type='number'
+										label="code postal"
+										min='0'
+										max='99999'
+										:rules='[rulesCP]'
+										required
+									></v-text-field>
+								</v-row>
+							</div>
+						</v-form>
 					</v-container>
 
-					<v-btn color="orange lighten-4" @click="commander">Commander</v-btn>
+					<v-btn color="orange lighten-4" @click="commander" :disabled="!valid"
+						>Commander</v-btn
+					>
 
 					<v-btn text>Cancel</v-btn>
 				</v-stepper-content>
 
 				<v-stepper-content step="3">
 					<div class="d-flex justify-space-between">
-						<v-btn text @click="getFacture()" color="orange lighten-4"
+						<v-btn text @click="getFacture()"
 							>Télécharger votre facture
 							<v-icon class="pl-5"
 								>mdi-arrow-down-bold-circle-outline</v-icon
 							></v-btn
-						>
-						<v-btn text
-							>Annuler
-							<v-icon class="pl-5">mdi-close-circle-outline</v-icon></v-btn
 						>
 					</div>
 				</v-stepper-content>

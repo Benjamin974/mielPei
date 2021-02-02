@@ -40,6 +40,13 @@ export default {
       timeout: 3000,
       idCommande: '',
       currentUser: null,
+      lazy: false,
+      valid: true,
+      rulesCP:  v  => {
+        if (!v.trim()) return true;
+        if (!isNaN(parseFloat(v)) && v >= 0 && v <= 99999) return true;
+        return 'Code postal à 5 chiffres';
+      },
 
     }
   },
@@ -94,7 +101,7 @@ export default {
       var a = document.createElement('a');
       var url = window.URL.createObjectURL(new Blob([responseData], { type: 'application/pdf' }));
       a.href = url;
-      a.download = 'test';
+      a.download = 'facture';
       a.click();
       window.URL.revokeObjectURL(url);
     }

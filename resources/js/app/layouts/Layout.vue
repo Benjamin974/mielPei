@@ -1,10 +1,10 @@
 <template>
-  <v-app>
+  <v-app style="background-color: rgba(255, 255, 128, .2);">
     <link
       href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
       rel="stylesheet"
     />
-    <v-container>
+    <v-container >
       <navbar></navbar>
     </v-container>
     <v-main>

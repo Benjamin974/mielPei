@@ -26,7 +26,7 @@ export default {
         'quantite',
       ],
       products: [],
-      
+
     }
   },
   computed: {
@@ -49,7 +49,7 @@ export default {
         this.producteur = data;
       });
     },
-  
+
     getProducts() {
       apiService.get('/api/producteurs/products/' + this.$route.params.id).then(({ data }) => {
         data.producteurs_has_products.forEach(products => {
@@ -64,6 +64,10 @@ export default {
     add(product) {
       const index = _.findIndex(this.products, { id: product.id });
       this.products.push(product);
+    },
+    del(product) {
+      const refreshDeleteData = this.products.filter(element => element.id != product.id);
+      this.products = refreshDeleteData;
     },
 
     nextPage() {

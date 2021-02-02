@@ -22,6 +22,7 @@ export default {
             detail: false,
             exploitations: [],
             exploiTation: null,
+            responsive: 'hidden-sm-and-down'
           
         }
     },
@@ -29,6 +30,7 @@ export default {
     mounted() {
         this.getExploitations();
         this.initMap();
+        
 
     },
 

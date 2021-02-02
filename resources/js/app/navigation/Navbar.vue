@@ -1,5 +1,5 @@
 <template>
-	<v-sheet color="white" elevation="1" class="pt-10 pb-10" rounded="xl">
+	<v-sheet color="white" elevation="1" class="pt-10 pb-10 orange lighten-4" rounded="xl">
 		<v-row class="d-flex justify-space-around align-center">
 			<v-tooltip bottom>
 				<template v-slot:activator="{ on, attrs }">

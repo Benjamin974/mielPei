@@ -25,7 +25,7 @@
 						prepend-inner-icon="mdi-magnify"
 						label="Trouvez un produit"
 					></v-text-field>
-					<template v-if="$vuetify.breakpoint.mdAndUp">
+					<template>
 						<v-spacer></v-spacer>
 						<v-spacer></v-spacer>
 					
@@ -46,7 +46,7 @@
 				>
 					<v-card elevation="1" rounded="xl">
 						<v-card-title class="subheading font-weight-bold d-flex justify-center">
-						<delete :product="item" />
+						<delete :product="item" @deleteProduct="del($event)" />
 
 						</v-card-title>
 

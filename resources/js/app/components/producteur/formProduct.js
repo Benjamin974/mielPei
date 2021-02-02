@@ -17,7 +17,19 @@ export default {
       prix: '',
       id: '',
       image: '',
-      quantite: ''
+      quantite: '',
+      menu: false,
+      snackbar: false,
+      text: "",
+      lazy: false,
+      valid: true,
+      timeout: 3000,
+      rules: {
+        name: [(v) => !!v || "champs requis"],
+        prix: [(v) => !!v || "champs requis"],
+        quantite: [(v) => !!v || "champs requis"],
+        img: [(v) => !!v || "Image requis"]
+      }
     }
   },
 
@@ -35,12 +47,17 @@ export default {
         this.$emit('updateProduct', data.data);
         if (this.isEdit) {
           this.$emit('updateProduct', data.data)
+          this.snackbar = true
           this.text = 'Le produit a été modifié'
       } else if(!this.isUpdate) {
           this.$emit('addProduct', data.data)
+          this.snackbar = true
+
           this.text = 'Le produit a été ajouté'
       }
       })
+
+      this.menu = false;
     },
     onFileChange(file) {
 

@@ -2437,7 +2437,27 @@ __webpack_require__.r(__webpack_exports__);
       prix: '',
       id: '',
       image: '',
-      quantite: ''
+      quantite: '',
+      menu: false,
+      snackbar: false,
+      text: "",
+      lazy: false,
+      valid: true,
+      timeout: 3000,
+      rules: {
+        name: [function (v) {
+          return !!v || "champs requis";
+        }],
+        prix: [function (v) {
+          return !!v || "champs requis";
+        }],
+        quantite: [function (v) {
+          return !!v || "champs requis";
+        }],
+        img: [function (v) {
+          return !!v || "Image requis";
+        }]
+      }
     };
   },
   methods: {
@@ -2464,13 +2484,16 @@ __webpack_require__.r(__webpack_exports__);
         if (_this.isEdit) {
           _this.$emit('updateProduct', data.data);
 
+          _this.snackbar = true;
           _this.text = 'Le produit a été modifié';
         } else if (!_this.isUpdate) {
           _this.$emit('addProduct', data.data);
 
+          _this.snackbar = true;
           _this.text = 'Le produit a été ajouté';
         }
       });
+      this.menu = false;
     },
     onFileChange: function onFileChange(file) {
       var _this2 = this;
@@ -2726,7 +2749,8 @@ __webpack_require__.r(__webpack_exports__);
       drawer: false,
       detail: false,
       exploitations: [],
-      exploiTation: null
+      exploiTation: null,
+      responsive: 'hidden-sm-and-down'
     };
   },
   mounted: function mounted() {
@@ -3082,6 +3106,12 @@ __webpack_require__.r(__webpack_exports__);
 
       this.products.push(product);
     },
+    del: function del(product) {
+      var refreshDeleteData = this.products.filter(function (element) {
+        return element.id != product.id;
+      });
+      this.products = refreshDeleteData;
+    },
     nextPage: function nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1;
     },
@@ -3239,7 +3269,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       text: "",
       timeout: 3000,
       idCommande: '',
-      currentUser: null
+      currentUser: null,
+      lazy: false,
+      valid: true,
+      rulesCP: function rulesCP(v) {
+        if (!v.trim()) return true;
+        if (!isNaN(parseFloat(v)) && v >= 0 && v <= 99999) return true;
+        return 'Code postal à 5 chiffres';
+      }
     };
   },
   created: function created() {
@@ -3327,7 +3364,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         type: 'application/pdf'
       }));
       a.href = url;
-      a.download = 'test';
+      a.download = 'facture';
       a.click();
       window.URL.revokeObjectURL(url);
     }
@@ -28988,110 +29025,112 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "v-sheet",
-    {
-      staticClass: "overflow-hidden",
-      staticStyle: { position: "relative" },
-      attrs: { height: "500" }
-    },
-    [
-      _c(
-        "v-navigation-drawer",
+  return _vm.exploiTation != null
+    ? _c(
+        "v-sheet",
         {
-          staticClass: "text-center font-weight-bold",
-          attrs: { width: "100%", permanent: "" },
-          scopedSlots: _vm._u(
-            [
-              _vm.exploiTation != null
-                ? {
-                    key: "append",
-                    fn: function() {
-                      return [
-                        _c(
-                          "div",
-                          { staticClass: "pa-2" },
-                          [
-                            _c("ficheExploitation", {
-                              attrs: { exploiTation: _vm.exploiTation }
-                            })
-                          ],
-                          1
-                        )
-                      ]
-                    },
-                    proxy: true
-                  }
-                : null
-            ],
-            null,
-            true
-          )
+          staticClass: "overflow-hidden mb-10",
+          staticStyle: { position: "relative" },
+          attrs: { height: "500" }
         },
         [
           _c(
-            "v-list-item",
+            "v-navigation-drawer",
+            {
+              staticClass: "font-weight-bold",
+              attrs: { width: "100%", permanent: "" },
+              scopedSlots: _vm._u(
+                [
+                  _vm.exploiTation != null
+                    ? {
+                        key: "append",
+                        fn: function() {
+                          return [
+                            _c(
+                              "div",
+                              { staticClass: "pa-2" },
+                              [
+                                _c("ficheExploitation", {
+                                  attrs: { exploiTation: _vm.exploiTation }
+                                })
+                              ],
+                              1
+                            )
+                          ]
+                        },
+                        proxy: true
+                      }
+                    : null
+                ],
+                null,
+                true
+              )
+            },
             [
+              _c(
+                "v-list-item",
+                [
+                  _vm.exploiTation != null
+                    ? _c(
+                        "v-list-item-content",
+                        [
+                          _c("v-list-item-title", [
+                            _vm._v(_vm._s(_vm.exploiTation.name))
+                          ])
+                        ],
+                        1
+                      )
+                    : _vm._e()
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("v-divider"),
+              _vm._v(" "),
               _vm.exploiTation != null
                 ? _c(
-                    "v-list-item-content",
+                    "v-list",
+                    { attrs: { dense: "" } },
                     [
-                      _c("v-list-item-title", [
-                        _vm._v(_vm._s(_vm.exploiTation.name))
-                      ])
+                      _c(
+                        "v-list-item",
+                        [
+                          _c("v-list-item-content", [
+                            _vm._v(
+                              "\n\t\t\t\t\t" +
+                                _vm._s(_vm.exploiTation.description) +
+                                "\n\t\t\t\t"
+                            )
+                          ])
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c("v-divider"),
+              _vm._v(" "),
+              _vm.exploiTation != null
+                ? _c(
+                    "v-card",
+                    { staticClass: "mt-5", attrs: { elevation: "0" } },
+                    [
+                      _c("ficheProducteur", {
+                        attrs: { exploiTation: _vm.exploiTation }
+                      })
                     ],
                     1
                   )
                 : _vm._e()
             ],
             1
-          ),
-          _vm._v(" "),
-          _c("v-divider"),
-          _vm._v(" "),
-          _vm.exploiTation != null
-            ? _c(
-                "v-list",
-                { attrs: { dense: "" } },
-                [
-                  _c(
-                    "v-list-item",
-                    [
-                      _c("v-list-item-content", [
-                        _vm._v(
-                          "\n\t\t\t\t\t" +
-                            _vm._s(_vm.exploiTation.description) +
-                            "\n\t\t\t\t"
-                        )
-                      ])
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _c("v-divider"),
-          _vm._v(" "),
-          _vm.exploiTation != null
-            ? _c(
-                "v-card",
-                { staticClass: "mt-5", attrs: { elevation: "0" } },
-                [
-                  _c("ficheProducteur", {
-                    attrs: { exploiTation: _vm.exploiTation }
-                  })
-                ],
-                1
-              )
-            : _vm._e()
+          )
         ],
         1
       )
-    ],
-    1
-  )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -30044,184 +30083,258 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "v-menu",
-    {
-      attrs: {
-        rounded: "xl",
-        "offset-y": "",
-        persistent: "",
-        "close-on-content-click": false
-      },
-      scopedSlots: _vm._u([
-        {
-          key: "activator",
-          fn: function(ref) {
-            var attrs = ref.attrs
-            var on = ref.on
-            return [
-              !_vm.isEdit
-                ? _c(
-                    "v-btn",
-                    _vm._g(
-                      _vm._b(
-                        { attrs: { color: "amber darken-3", icon: "" } },
-                        "v-btn",
-                        attrs,
-                        false
-                      ),
-                      on
-                    ),
-                    [_c("v-icon", [_vm._v("mdi-plus")])],
-                    1
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.isEdit
-                ? _c(
-                    "v-btn",
-                    _vm._g(
-                      _vm._b(
-                        {
-                          attrs: { color: "amber darken-3", icon: "" },
-                          on: {
-                            click: function($event) {
-                              return _vm.edit(_vm.product)
-                            }
-                          }
-                        },
-                        "v-btn",
-                        attrs,
-                        false
-                      ),
-                      on
-                    ),
-                    [_c("v-icon", [_vm._v("mdi-playlist-edit")])],
-                    1
-                  )
-                : _vm._e()
-            ]
-          }
-        }
-      ])
-    },
+    "div",
     [
-      _vm._v(" "),
       _c(
-        "v-list",
-        { staticClass: "text-center" },
-        [
-          _c(
-            "v-list-item",
-            { attrs: { link: "" } },
-            [
-              _c(
-                "v-list-item-title",
-                [
-                  _c("v-text-field", {
-                    attrs: { label: "Nom :" },
-                    model: {
-                      value: _vm.name,
-                      callback: function($$v) {
-                        _vm.name = $$v
-                      },
-                      expression: "name"
-                    }
-                  })
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "v-list-item",
-            { attrs: { link: "" } },
-            [
-              _c(
-                "v-list-item-title",
-                [
-                  _c("v-text-field", {
-                    attrs: { type: "number", min: "0", label: "Prix :" },
-                    model: {
-                      value: _vm.prix,
-                      callback: function($$v) {
-                        _vm.prix = $$v
-                      },
-                      expression: "prix"
-                    }
-                  })
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "v-list-item",
-            { attrs: { link: "" } },
-            [
-              _c(
-                "v-list-item-title",
-                [
-                  _c("v-text-field", {
-                    attrs: { type: "number", min: "1", label: "Quantité :" },
-                    model: {
-                      value: _vm.quantite,
-                      callback: function($$v) {
-                        _vm.quantite = $$v
-                      },
-                      expression: "quantite"
-                    }
-                  })
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "v-list-item",
-            { attrs: { link: "" } },
-            [
-              _c(
-                "v-list-item-title",
-                [
-                  _c(
-                    "v-col",
-                    { attrs: { cols: "12", sm: "6", md: "12" } },
-                    [_c("v-file-input", { on: { change: _vm.onFileChange } })],
-                    1
-                  ),
-                  _vm._v(" "),
+        "v-menu",
+        {
+          attrs: {
+            rounded: "xl",
+            "offset-y": "",
+            persistent: "",
+            "close-on-content-click": false
+          },
+          scopedSlots: _vm._u([
+            {
+              key: "activator",
+              fn: function(ref) {
+                var attrs = ref.attrs
+                var on = ref.on
+                return [
                   !_vm.isEdit
-                    ? _c("v-img", {
-                        attrs: {
-                          src: _vm.image,
-                          width: "100px",
-                          height: "100px"
-                        }
-                      })
+                    ? _c(
+                        "v-btn",
+                        _vm._g(
+                          _vm._b(
+                            { attrs: { color: "amber darken-3", icon: "" } },
+                            "v-btn",
+                            attrs,
+                            false
+                          ),
+                          on
+                        ),
+                        [_c("v-icon", [_vm._v("mdi-plus")])],
+                        1
+                      )
                     : _vm._e(),
                   _vm._v(" "),
                   _vm.isEdit
-                    ? _c("v-img", {
-                        attrs: {
-                          src: _vm.product.image,
-                          width: "100px",
-                          height: "100px"
-                        }
-                      })
-                    : _vm._e(),
+                    ? _c(
+                        "v-btn",
+                        _vm._g(
+                          _vm._b(
+                            {
+                              attrs: { color: "amber darken-3", icon: "" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.edit(_vm.product)
+                                }
+                              }
+                            },
+                            "v-btn",
+                            attrs,
+                            false
+                          ),
+                          on
+                        ),
+                        [_c("v-icon", [_vm._v("mdi-playlist-edit")])],
+                        1
+                      )
+                    : _vm._e()
+                ]
+              }
+            }
+          ]),
+          model: {
+            value: _vm.menu,
+            callback: function($$v) {
+              _vm.menu = $$v
+            },
+            expression: "menu"
+          }
+        },
+        [
+          _vm._v(" "),
+          _c(
+            "v-list",
+            { staticClass: "text-center" },
+            [
+              _c(
+                "v-form",
+                {
+                  ref: "form",
+                  attrs: { "lazy-validation": _vm.lazy },
+                  model: {
+                    value: _vm.valid,
+                    callback: function($$v) {
+                      _vm.valid = $$v
+                    },
+                    expression: "valid"
+                  }
+                },
+                [
+                  _c(
+                    "v-list-item",
+                    { attrs: { link: "" } },
+                    [
+                      _c(
+                        "v-list-item-title",
+                        [
+                          _c("v-text-field", {
+                            attrs: { label: "Nom :", rules: _vm.rules.name },
+                            model: {
+                              value: _vm.name,
+                              callback: function($$v) {
+                                _vm.name = $$v
+                              },
+                              expression: "name"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
-                  _c("br"),
+                  _c(
+                    "v-list-item",
+                    { attrs: { link: "" } },
+                    [
+                      _c(
+                        "v-list-item-title",
+                        [
+                          _c("v-text-field", {
+                            attrs: {
+                              type: "number",
+                              min: "0",
+                              label: "Prix :",
+                              rules: _vm.rules.prix,
+                              required: ""
+                            },
+                            model: {
+                              value: _vm.prix,
+                              callback: function($$v) {
+                                _vm.prix = $$v
+                              },
+                              expression: "prix"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-list-item",
+                    { attrs: { link: "" } },
+                    [
+                      _c(
+                        "v-list-item-title",
+                        [
+                          _c("v-text-field", {
+                            attrs: {
+                              type: "number",
+                              min: "1",
+                              label: "Quantité :",
+                              required: "",
+                              rules: _vm.rules.quantite
+                            },
+                            model: {
+                              value: _vm.quantite,
+                              callback: function($$v) {
+                                _vm.quantite = $$v
+                              },
+                              expression: "quantite"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-list-item",
+                    { attrs: { link: "" } },
+                    [
+                      _c(
+                        "v-list-item-title",
+                        [
+                          _c(
+                            "v-col",
+                            { attrs: { cols: "12", sm: "6", md: "12" } },
+                            [
+                              _c("v-file-input", {
+                                attrs: { rules: _vm.rules.img, required: "" },
+                                on: { change: _vm.onFileChange }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          !_vm.isEdit
+                            ? _c("v-img", {
+                                attrs: {
+                                  src: _vm.image,
+                                  width: "100px",
+                                  height: "100px"
+                                }
+                              })
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.isEdit
+                            ? _c("v-img", {
+                                attrs: {
+                                  src: _vm.product.image,
+                                  width: "100px",
+                                  height: "100px"
+                                }
+                              })
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c(
+                            "v-btn",
+                            {
+                              attrs: { icon: "" },
+                              on: { click: _vm.removeImg }
+                            },
+                            [_c("v-icon", [_vm._v("mdi-close-circle")])],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("v-list-item")
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c("v-spacer"),
                   _vm._v(" "),
                   _c(
                     "v-btn",
-                    { attrs: { icon: "" }, on: { click: _vm.removeImg } },
-                    [_c("v-icon", [_vm._v("mdi-close-circle")])],
+                    {
+                      attrs: { icon: "", disabled: !_vm.valid },
+                      on: {
+                        click: function($event) {
+                          return _vm.actions()
+                        }
+                      }
+                    },
+                    [_c("v-icon", [_vm._v("mdi-subdirectory-arrow-right")])],
                     1
                   )
                 ],
@@ -30229,30 +30342,36 @@ var render = function() {
               )
             ],
             1
-          ),
-          _vm._v(" "),
-          _c("v-list-item"),
-          _vm._v(" "),
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-snackbar",
+        {
+          attrs: { timeout: _vm.timeout },
+          model: {
+            value: _vm.snackbar,
+            callback: function($$v) {
+              _vm.snackbar = $$v
+            },
+            expression: "snackbar"
+          }
+        },
+        [
+          _vm._v("\n\t\t" + _vm._s(_vm.text) + "\n\t\t"),
           _c(
-            "v-card-actions",
-            [
-              _c("v-spacer"),
-              _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  attrs: { icon: "" },
-                  on: {
-                    click: function($event) {
-                      return _vm.actions()
-                    }
-                  }
-                },
-                [_c("v-icon", [_vm._v("mdi-subdirectory-arrow-right")])],
-                1
-              )
-            ],
-            1
+            "v-btn",
+            {
+              attrs: { color: "blue", text: "" },
+              on: {
+                click: function($event) {
+                  _vm.snackbar = false
+                }
+              }
+            },
+            [_vm._v("Close")]
           )
         ],
         1
@@ -30693,6 +30812,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-app",
+    { staticStyle: { "background-color": "rgba(255, 255, 128, .2)" } },
     [
       _c("link", {
         attrs: {
@@ -30743,7 +30863,7 @@ var render = function() {
     [
       _c(
         "v-row",
-        { attrs: { align: "center", justify: "center" } },
+        { staticClass: "pa-15", attrs: { align: "center", justify: "center" } },
         [
           _c(
             "v-toolbar",
@@ -30758,11 +30878,83 @@ var render = function() {
           _vm._v(" "),
           _c(
             "v-card-text",
+            { staticClass: "pa-15" },
             [
               _c(
                 "v-form",
                 {
                   ref: "form",
+                  staticClass: "pa-15 hidden-sm-and-down",
+                  attrs: { "lazy-validation": _vm.lazy },
+                  model: {
+                    value: _vm.valid,
+                    callback: function($$v) {
+                      _vm.valid = $$v
+                    },
+                    expression: "valid"
+                  }
+                },
+                [
+                  _c("v-text-field", {
+                    attrs: {
+                      label: "Email de connexion",
+                      name: "login",
+                      rules: _vm.emailRules,
+                      "prepend-icon": "mdi-account",
+                      type: "text"
+                    },
+                    model: {
+                      value: _vm.user.email,
+                      callback: function($$v) {
+                        _vm.$set(_vm.user, "email", $$v)
+                      },
+                      expression: "user.email"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("v-text-field", {
+                    attrs: {
+                      id: "password",
+                      label: "Mot de passe",
+                      rules: _vm.pwdRules,
+                      name: "password",
+                      "prepend-icon": "mdi-lock",
+                      type: "password"
+                    },
+                    on: {
+                      keydown: function($event) {
+                        if (
+                          !$event.type.indexOf("key") &&
+                          _vm._k(
+                            $event.keyCode,
+                            "enter",
+                            13,
+                            $event.key,
+                            "Enter"
+                          )
+                        ) {
+                          return null
+                        }
+                        return _vm.connection($event)
+                      }
+                    },
+                    model: {
+                      value: _vm.user.password,
+                      callback: function($$v) {
+                        _vm.$set(_vm.user, "password", $$v)
+                      },
+                      expression: "user.password"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-form",
+                {
+                  ref: "form",
+                  staticClass: " hidden-md-and-up",
                   attrs: { "lazy-validation": _vm.lazy },
                   model: {
                     value: _vm.valid,
@@ -30911,7 +31103,7 @@ var render = function() {
   return _c(
     "v-sheet",
     {
-      staticClass: "pt-10 pb-10",
+      staticClass: "pt-10 pb-10 orange lighten-4",
       attrs: { color: "white", elevation: "1", rounded: "xl" }
     },
     [
@@ -31314,17 +31506,27 @@ var render = function() {
       _c(
         "v-row",
         [
-          _c("v-col", { staticClass: "px-0", attrs: { md: "9" } }, [
-            _c("div", {
-              staticClass: "map",
-              staticStyle: { "z-index": "10" },
-              attrs: { id: "map" }
-            })
-          ]),
+          _c(
+            "v-list-item-title",
+            { staticClass: "display-1 font-weight-bold my-10" },
+            [_vm._v(" EXPLOITATIONS  ")]
+          ),
           _vm._v(" "),
           _c(
             "v-col",
-            { staticClass: "px-0", attrs: { md: "3" } },
+            { staticClass: "px-0", attrs: { cols: "12", lg: "9", md: "12" } },
+            [
+              _c("div", {
+                staticClass: "map",
+                staticStyle: { "z-index": "10" },
+                attrs: { id: "map" }
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "v-col",
+            { staticClass: "px-0" },
             [
               _c("exploitation", {
                 attrs: { drawer: _vm.drawer, exploiTation: _vm.exploiTation }
@@ -31968,21 +32170,19 @@ var render = function() {
                       }
                     }),
                     _vm._v(" "),
-                    _vm.$vuetify.breakpoint.mdAndUp
-                      ? [
-                          _c("v-spacer"),
-                          _vm._v(" "),
-                          _c("v-spacer"),
-                          _vm._v(" "),
-                          _c("formProduct", {
-                            on: {
-                              addProduct: function($event) {
-                                return _vm.add($event)
-                              }
-                            }
-                          })
-                        ]
-                      : _vm._e()
+                    [
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c("formProduct", {
+                        on: {
+                          addProduct: function($event) {
+                            return _vm.add($event)
+                          }
+                        }
+                      })
+                    ]
                   ],
                   2
                 )
@@ -32014,7 +32214,16 @@ var render = function() {
                                 staticClass:
                                   "subheading font-weight-bold d-flex justify-center"
                               },
-                              [_c("delete", { attrs: { product: item } })],
+                              [
+                                _c("delete", {
+                                  attrs: { product: item },
+                                  on: {
+                                    deleteProduct: function($event) {
+                                      return _vm.del($event)
+                                    }
+                                  }
+                                })
+                              ],
                               1
                             ),
                             _vm._v(" "),
@@ -32473,154 +32682,74 @@ var render = function() {
                     "v-container",
                     [
                       _c(
-                        "div",
+                        "v-form",
+                        {
+                          ref: "form",
+                          attrs: { "lazy-validation": _vm.lazy },
+                          model: {
+                            value: _vm.valid,
+                            callback: function($$v) {
+                              _vm.valid = $$v
+                            },
+                            expression: "valid"
+                          }
+                        },
                         [
-                          _c("h3", [_vm._v("Adresse de livraison")]),
-                          _vm._v(" "),
                           _c(
-                            "v-row",
-                            [
-                              _c("v-text-field", {
-                                staticClass: "pa-2",
-                                attrs: { md: "4", label: "nom" },
-                                model: {
-                                  value: _vm.commande.livraison.name,
-                                  callback: function($$v) {
-                                    _vm.$set(
-                                      _vm.commande.livraison,
-                                      "name",
-                                      $$v
-                                    )
-                                  },
-                                  expression: "commande.livraison.name"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("v-text-field", {
-                                staticClass: "pa-2",
-                                attrs: { md: "4", label: "pays" },
-                                model: {
-                                  value: _vm.commande.livraison.pays,
-                                  callback: function($$v) {
-                                    _vm.$set(
-                                      _vm.commande.livraison,
-                                      "pays",
-                                      $$v
-                                    )
-                                  },
-                                  expression: "commande.livraison.pays"
-                                }
-                              })
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "v-row",
-                            [
-                              _c("v-text-field", {
-                                staticClass: "pa-2",
-                                attrs: { md: "4", label: "ville" },
-                                model: {
-                                  value: _vm.commande.livraison.ville,
-                                  callback: function($$v) {
-                                    _vm.$set(
-                                      _vm.commande.livraison,
-                                      "ville",
-                                      $$v
-                                    )
-                                  },
-                                  expression: "commande.livraison.ville"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("v-text-field", {
-                                staticClass: "pa-2",
-                                attrs: { md: "4", label: "adresse" },
-                                model: {
-                                  value: _vm.commande.livraison.address,
-                                  callback: function($$v) {
-                                    _vm.$set(
-                                      _vm.commande.livraison,
-                                      "address",
-                                      $$v
-                                    )
-                                  },
-                                  expression: "commande.livraison.address"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _c("v-text-field", {
-                                staticClass: "pa-2",
-                                attrs: { md: "4", label: "code postal" },
-                                model: {
-                                  value: _vm.commande.livraison.postal_code,
-                                  callback: function($$v) {
-                                    _vm.$set(
-                                      _vm.commande.livraison,
-                                      "postal_code",
-                                      $$v
-                                    )
-                                  },
-                                  expression: "commande.livraison.postal_code"
-                                }
-                              })
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c("v-switch", {
-                        attrs: { label: "Selectable" },
-                        model: {
-                          value: _vm.selectable,
-                          callback: function($$v) {
-                            _vm.selectable = $$v
-                          },
-                          expression: "selectable"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _vm.selectable
-                        ? _c(
                             "div",
                             [
-                              _c("h3", [_vm._v("Adresse de facturation")]),
+                              _c("h3", [_vm._v("Adresse de livraison")]),
                               _vm._v(" "),
                               _c(
                                 "v-row",
                                 [
                                   _c("v-text-field", {
                                     staticClass: "pa-2",
-                                    attrs: { md: "4", label: "nom" },
+                                    attrs: {
+                                      md: "4",
+                                      label: "nom",
+                                      required: "",
+                                      rules: [
+                                        function(v) {
+                                          return !!v || "champs requis"
+                                        }
+                                      ]
+                                    },
                                     model: {
-                                      value: _vm.commande.facturation.name,
+                                      value: _vm.commande.livraison.name,
                                       callback: function($$v) {
                                         _vm.$set(
-                                          _vm.commande.facturation,
+                                          _vm.commande.livraison,
                                           "name",
                                           $$v
                                         )
                                       },
-                                      expression: "commande.facturation.name"
+                                      expression: "commande.livraison.name"
                                     }
                                   }),
                                   _vm._v(" "),
                                   _c("v-text-field", {
                                     staticClass: "pa-2",
-                                    attrs: { md: "4", label: "pays" },
+                                    attrs: {
+                                      md: "4",
+                                      label: "pays",
+                                      required: "",
+                                      rules: [
+                                        function(v) {
+                                          return !!v || "champs requis"
+                                        }
+                                      ]
+                                    },
                                     model: {
-                                      value: _vm.commande.facturation.pays,
+                                      value: _vm.commande.livraison.pays,
                                       callback: function($$v) {
                                         _vm.$set(
-                                          _vm.commande.facturation,
+                                          _vm.commande.livraison,
                                           "pays",
                                           $$v
                                         )
                                       },
-                                      expression: "commande.facturation.pays"
+                                      expression: "commande.livraison.pays"
                                     }
                                   })
                                 ],
@@ -32632,51 +32761,74 @@ var render = function() {
                                 [
                                   _c("v-text-field", {
                                     staticClass: "pa-2",
-                                    attrs: { md: "4", label: "ville" },
+                                    attrs: {
+                                      md: "4",
+                                      label: "ville",
+                                      rules: [
+                                        function(v) {
+                                          return !!v || "champs requis"
+                                        }
+                                      ],
+                                      required: ""
+                                    },
                                     model: {
-                                      value: _vm.commande.facturation.ville,
+                                      value: _vm.commande.livraison.ville,
                                       callback: function($$v) {
                                         _vm.$set(
-                                          _vm.commande.facturation,
+                                          _vm.commande.livraison,
                                           "ville",
                                           $$v
                                         )
                                       },
-                                      expression: "commande.facturation.ville"
+                                      expression: "commande.livraison.ville"
                                     }
                                   }),
                                   _vm._v(" "),
                                   _c("v-text-field", {
                                     staticClass: "pa-2",
-                                    attrs: { md: "4", label: "adresse" },
+                                    attrs: {
+                                      md: "4",
+                                      label: "adresse",
+                                      rules: [
+                                        function(v) {
+                                          return !!v || "champs requis"
+                                        }
+                                      ],
+                                      required: ""
+                                    },
                                     model: {
-                                      value: _vm.commande.facturation.address,
+                                      value: _vm.commande.livraison.address,
                                       callback: function($$v) {
                                         _vm.$set(
-                                          _vm.commande.facturation,
+                                          _vm.commande.livraison,
                                           "address",
                                           $$v
                                         )
                                       },
-                                      expression: "commande.facturation.address"
+                                      expression: "commande.livraison.address"
                                     }
                                   }),
                                   _vm._v(" "),
                                   _c("v-text-field", {
                                     staticClass: "pa-2",
-                                    attrs: { md: "4", label: "code postal" },
+                                    attrs: {
+                                      type: "number",
+                                      md: "4",
+                                      label: "code postal",
+                                      rules: [_vm.rulesCP],
+                                      required: ""
+                                    },
                                     model: {
-                                      value:
-                                        _vm.commande.facturation.postal_code,
+                                      value: _vm.commande.livraison.postal_code,
                                       callback: function($$v) {
                                         _vm.$set(
-                                          _vm.commande.facturation,
+                                          _vm.commande.livraison,
                                           "postal_code",
                                           $$v
                                         )
                                       },
                                       expression:
-                                        "commande.facturation.postal_code"
+                                        "commande.livraison.postal_code"
                                     }
                                   })
                                 ],
@@ -32684,8 +32836,175 @@ var render = function() {
                               )
                             ],
                             1
-                          )
-                        : _vm._e()
+                          ),
+                          _vm._v(" "),
+                          _c("v-switch", {
+                            attrs: { label: "Selectable" },
+                            model: {
+                              value: _vm.selectable,
+                              callback: function($$v) {
+                                _vm.selectable = $$v
+                              },
+                              expression: "selectable"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.selectable
+                            ? _c(
+                                "div",
+                                [
+                                  _c("h3", [_vm._v("Adresse de facturation")]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-row",
+                                    [
+                                      _c("v-text-field", {
+                                        staticClass: "pa-2",
+                                        attrs: {
+                                          md: "4",
+                                          label: "nom",
+                                          rules: [
+                                            function(v) {
+                                              return !!v || "champs requis"
+                                            }
+                                          ],
+                                          required: ""
+                                        },
+                                        model: {
+                                          value: _vm.commande.facturation.name,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.commande.facturation,
+                                              "name",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "commande.facturation.name"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("v-text-field", {
+                                        staticClass: "pa-2",
+                                        attrs: {
+                                          md: "4",
+                                          label: "pays",
+                                          rules: [
+                                            function(v) {
+                                              return !!v || "champs requis"
+                                            }
+                                          ],
+                                          required: ""
+                                        },
+                                        model: {
+                                          value: _vm.commande.facturation.pays,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.commande.facturation,
+                                              "pays",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "commande.facturation.pays"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-row",
+                                    [
+                                      _c("v-text-field", {
+                                        staticClass: "pa-2",
+                                        attrs: {
+                                          md: "4",
+                                          label: "ville",
+                                          rules: [
+                                            function(v) {
+                                              return !!v || "champs requis"
+                                            }
+                                          ],
+                                          required: ""
+                                        },
+                                        model: {
+                                          value: _vm.commande.facturation.ville,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.commande.facturation,
+                                              "ville",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "commande.facturation.ville"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("v-text-field", {
+                                        staticClass: "pa-2",
+                                        attrs: {
+                                          md: "4",
+                                          label: "adresse",
+                                          rules: [
+                                            function(v) {
+                                              return !!v || "champs requis"
+                                            }
+                                          ],
+                                          required: ""
+                                        },
+                                        model: {
+                                          value:
+                                            _vm.commande.facturation.address,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.commande.facturation,
+                                              "address",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "commande.facturation.address"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("v-text-field", {
+                                        staticClass: "pa-2",
+                                        attrs: {
+                                          md: "4",
+                                          type: "number",
+                                          label: "code postal",
+                                          min: "0",
+                                          max: "99999",
+                                          rules: [_vm.rulesCP],
+                                          required: ""
+                                        },
+                                        model: {
+                                          value:
+                                            _vm.commande.facturation
+                                              .postal_code,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.commande.facturation,
+                                              "postal_code",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "commande.facturation.postal_code"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            : _vm._e()
+                        ],
+                        1
+                      )
                     ],
                     1
                   ),
@@ -32693,7 +33012,10 @@ var render = function() {
                   _c(
                     "v-btn",
                     {
-                      attrs: { color: "orange lighten-4" },
+                      attrs: {
+                        color: "orange lighten-4",
+                        disabled: !_vm.valid
+                      },
                       on: { click: _vm.commander }
                     },
                     [_vm._v("Commander")]
@@ -32712,7 +33034,7 @@ var render = function() {
                     _c(
                       "v-btn",
                       {
-                        attrs: { text: "", color: "orange lighten-4" },
+                        attrs: { text: "" },
                         on: {
                           click: function($event) {
                             return _vm.getFacture()
@@ -32723,18 +33045,6 @@ var render = function() {
                         _vm._v("Télécharger votre facture\n\t\t\t\t\t\t"),
                         _c("v-icon", { staticClass: "pl-5" }, [
                           _vm._v("mdi-arrow-down-bold-circle-outline")
-                        ])
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "v-btn",
-                      { attrs: { text: "" } },
-                      [
-                        _vm._v("Annuler\n\t\t\t\t\t\t"),
-                        _c("v-icon", { staticClass: "pl-5" }, [
-                          _vm._v("mdi-close-circle-outline")
                         ])
                       ],
                       1
