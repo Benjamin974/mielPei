@@ -18,8 +18,10 @@ class CreateCommandesHasProductsTable extends Migration
             $table->string('quantite')->nullable();
             $table->bigInteger('id_commande')->unsigned();
             $table->bigInteger('id_product')->unsigned();
+            $table->bigInteger('id_user')->unsigned()->nullable();
             $table->foreign('id_commande')->references('id')->on('commandes');
             $table->foreign('id_product')->references('id')->on('products');
+            $table->foreign('id_user')->references('id')->on('users');
             $table->timestamps();
         });
     }

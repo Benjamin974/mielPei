@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommandesProductsResource;
+use App\Http\Resources\LivraisonResource;
+use App\Http\Resources\ProductsResource;
+use App\Models\Commande;
+use App\Models\CommandesProducts;
 use App\Models\Fiches;
+use App\Models\Livraison;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -13,8 +19,10 @@ class ProducteursController extends Controller
 {
     public function getProducts(Request $request, $id)
     {
-        $products = User::with('producteursHasProducts')->where('id', $id)->first();
-        return $products;
+        $products = User::with(['products' => function ($query) {
+            return $query->orderBy('popularite', 'DESC')->paginate(4);
+        }])->where('id', $id)->first();
+        return ProductsResource::collection($products->products);
     }
 
     public function getFiche($id)
@@ -41,7 +49,7 @@ class ProducteursController extends Controller
         $fiche->profession = $validator['profession'];
         $fiche->content = $validator['content'];
         $fiche->save();
-        
+
         return $fiche;
     }
 
@@ -61,6 +69,7 @@ class ProducteursController extends Controller
             ]
         )->validate();
 
+
         $product = Product::find($validator['id']);
 
 
@@ -75,9 +84,7 @@ class ProducteursController extends Controller
             $product->name = $validator['name'];
             $product->prix = $validator['prix'];
             $product->quantite = $validator['quantite'];
-
-
-
+            $product->id_user = $validator['id_user'];
             $img = $request->get('image');
 
             if ($product->image != $img) {
@@ -111,13 +118,6 @@ class ProducteursController extends Controller
 
             $product->save();
 
-            $producteur = User::with(['producteursHasProducts'])->find($validator['id_user']);
-            if (!$producteur) {
-                return 'error';
-            }
-
-            $producteur->producteursHasProducts()->detach($product);
-            $producteur->producteursHasProducts()->attach($product);
             return $product;
         }
     }
@@ -147,5 +147,57 @@ class ProducteursController extends Controller
         } else {
             return 'erreur';
         }
+    }
+
+
+    public function getProductsCommande($id)
+    {
+        $products = Product::where('id_user', $id)->with(['commandesHasProducts' => function ($query) use ($id) {
+            $query->with(['product', 'commande']);
+        }])->get();
+
+        return $products;
+    }
+
+    public function addLivraison(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'id_product' => 'required',
+                'id_commande' => 'required',
+            ],
+            [
+                'required' => 'Le champs :attribute est requis', // :attribute renvoie le champs / l'id de l'element en erreure
+            ]
+        )->validate();
+
+        $livraison = new Livraison();
+        $livraison->id_product = $validator['id_product'];
+        $livraison->id_commande = $validator['id_commande'];
+        $livraison->id_status = 1;
+        $livraison->save();
+
+        return new LivraisonResource($livraison);
+    }
+
+    public function getLivraison(Request $request, $id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'id_commande' => 'required',
+            ],
+            [
+                'required' => 'Le champs :attribute est requis', // :attribute renvoie le champs / l'id de l'element en erreure
+            ]
+        )->validate();
+
+            $livraison = Livraison::where('id_product', $id)->where('id_commande', $validator['id_commande'])->first();
+            if($livraison) {
+                return new LivraisonResource($livraison);
+            } else {
+                return response()->json(['message' => 'toto']);
+            }
     }
 }

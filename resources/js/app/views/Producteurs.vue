@@ -1,5 +1,5 @@
 <template>
-	<v-container>
+	<v-container class="mb-10">
     <h1 class="mb-6"> Les Producteurs </h1>
 		<v-row>
 			<v-col md="6" v-for="(producteur, key) in producteurs" :key="key">

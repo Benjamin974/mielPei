@@ -9,21 +9,26 @@ class Product extends Model
 {
     use HasFactory;
     protected $table = 'products';
-    protected $fillable = ['name', 'image', 'prix'];
+    protected $fillable = ['name', 'image', 'prix', 'id_user'];
 
     public function exploitations()
     {
         return $this->hasMany(Exploitation::class, 'id_product');
     }
 
-    function commandesHasProducts()
+    function livraison()
     {
-        return $this->belongsToMany('App\Models\Commande', 'commandes_has_products', 'id_commande', 'id_product');
+        return $this->hasMany(Livraison::class, 'id_product');
     }
 
-    function producteursHasProducts()
+    function commandesHasProducts()
     {
-        return $this->belongsToMany('App\Models\User', 'producteurs_has_products', 'id_user', 'id_product');
+        return $this->hasMany(CommandesProducts::class, 'id_product');
+    }
+
+    function producteur()
+    {
+        return $this->belongsTo(User::class, 'id_user');
     }
     
     function facturesHasProducts()

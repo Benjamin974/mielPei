@@ -33,7 +33,7 @@ export default {
 
     getProduct() {
       apiService.get('/api/producteurs/products/' + this.producteur.id).then(({data}) => {
-        data.producteurs_has_products.forEach(product => {
+        data.data.forEach(product => {
           this.products.push(product);
         });
       })

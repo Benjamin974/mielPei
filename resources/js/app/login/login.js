@@ -39,7 +39,6 @@ export default {
                         this.erreur = 'mot de passe ou email oublié'
                     } else {
                         this.erreur = '';
-                        console.log(user)
                         this.$router.push(this.returnUrl);
                     }
                 },

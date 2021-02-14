@@ -40,26 +40,34 @@
 						</v-list-item-content>
 					</template>
 
-					<v-list-item v-for="(product, key) in products" :key="key">
-						<v-list-item-content>
-							<v-row justify="center">
-								<v-col md="4">
-									<v-list-item-title v-text="product.name"></v-list-item-title>
-								</v-col>
-								<v-col md="4">
-									<v-img
-										:src="product.image"
-										height="50px"
-										width="50px"
-									></v-img>
-								</v-col>
-							</v-row>
-						</v-list-item-content>
-					</v-list-item>
+					<v-row align="center" justify="center" class="d-flex flex-column">
+						<b-table
+							id="my-table"
+							:items="products"
+							:per-page="perPage"
+							:current-page="currentPage"
+							striped
+							responsive='sm'
+							:fields="fields"
+						>
+							<template #item(idnameimageprixquantite)="data">
+								<b>{{ data.item.id }}</b>
+							</template>
+							<template #cell(image)="data">
+								<v-img height="60" width="60" :src="data.value"></v-img>
+							</template>
+						</b-table>
+						<b-pagination
+							v-model="currentPage"
+							:total-rows="rows"
+							:per-page="perPage"
+							pills
+						></b-pagination>
+					</v-row>
 				</v-list>
 				<v-btn
 					color="orange lighten-4 mb-5"
-					to='/products'
+					to="/products"
 					rounded
 					elevation="0"
 				>

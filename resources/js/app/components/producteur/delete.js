@@ -14,7 +14,6 @@ export default {
   }, 
   methods: {
     deleteProduct(product) {
-      console.log(product.pivot);
       apiService.post('/api/producteurs/products/delete/' + product.id, {id_user: this.product.pivot.id_user}).then(
         this.$emit('deleteProduct', product)
       )

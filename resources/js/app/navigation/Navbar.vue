@@ -1,14 +1,19 @@
 <template>
-	<v-sheet color="white" elevation="1" class="pt-10 pb-10 orange lighten-4" rounded="xl">
+	<v-sheet
+		color="white"
+		elevation="1"
+		class="px-10 orange lighten-4 pb-2"
+		rounded="xl"
+	>
 		<v-row class="d-flex justify-space-around align-center">
-			<v-tooltip bottom>
-				<template v-slot:activator="{ on, attrs }">
-					<v-btn v-bind="attrs" v-on="on" color="orange lighten-1" to="/" icon>
-						<v-icon color="brown darken-4">mdi-home</v-icon>
-					</v-btn>
-				</template>
-				<span>Accueil</span>
-			</v-tooltip>
+			<router-link to="/"
+				><v-img
+					height="80"
+					max-width="120"
+					src="/storage/images/logo.png"
+					class="image"
+				></v-img
+			></router-link>
 
 			<v-tooltip bottom v-if="isChecked && isClient">
 				<template v-slot:activator="{ on, attrs }">
@@ -64,7 +69,9 @@
 						color="orange lighten-1"
 						icon
 					>
-						<v-icon color="brown darken-4">mdi-account-box-multiple-outline</v-icon>
+						<v-icon color="brown darken-4"
+							>mdi-account-box-multiple-outline</v-icon
+						>
 					</v-btn>
 				</template>
 				<span>Dashboard</span>
@@ -100,8 +107,23 @@
 				</template>
 				<span>Deconnexion</span>
 			</v-tooltip>
+			<div bottom v-if="isChecked && isClient">
+				<historiqueCommande :user="currentUser" />
+			</div>
 		</v-row>
 	</v-sheet>
 </template>
 
 <script src="./navbar.js" />
+
+<style scoped>
+.image {
+	transition: 0.3s;
+}
+
+.image:hover {
+	-webkit-transform: scale(1.1);
+	-ms-transform: scale(1.1);
+	transform: scale(1.1);
+}
+</style>

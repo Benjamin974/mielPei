@@ -1,10 +1,11 @@
 import Basket from "../components/Basket.vue";
 import { authenticationService } from "../_services/authentication.service";
 import router from "../routes";
-
+import HistoriqueCommande from '../components/client/HistoriqueCommande'
 export default {
   components: {
-    Basket
+    Basket,
+    HistoriqueCommande
   },
   data() {
     return {

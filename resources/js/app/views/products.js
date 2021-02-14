@@ -7,12 +7,17 @@ export default {
 
   data() {
     return {
-      products: []
+      products: [],
+      page: 0,
+      pagination: {
+        visible: 10,
+        pageCount: 0,
+      }
     }
   },
 
   created() {
-    this.getProducts();
+    this.nextPageProducts(1);
   },
 
   methods: {
@@ -24,6 +29,19 @@ export default {
 
           }
         });
+      })
+    },
+
+    nextPageProducts(page) {
+      this.products = [];
+      apiService.get('/api/products?page=' + page).then(({ data }) => {
+        data.data.forEach(product => {
+          if (product.quantite != 0) {
+            this.products.push(product);
+
+          }
+        });
+        this.pagination.pageCount = data.meta.last_page
       })
     }
   }

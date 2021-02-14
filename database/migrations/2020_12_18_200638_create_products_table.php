@@ -19,6 +19,9 @@ class CreateProductsTable extends Migration
             $table->string('image');
             $table->integer('prix');
             $table->integer('quantite');
+            $table->bigInteger('id_user')->unsigned();
+            $table->foreign('id_user')->references('id')->on('users');
+            $table->integer('popularite')->nullable();
             $table->timestamps();
         });
     }

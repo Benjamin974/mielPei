@@ -1,8 +1,11 @@
 import Exploitation from '../components/Exploitation.vue'
+import PopularProducts from '../components/products/PopularProducts.vue'
 import { apiService } from '../_services/apiService';
+import { authenticationService } from '../_services/authentication.service';
 export default {
 
     components: {
+        PopularProducts,
         Exploitation
     },
     data() {
@@ -22,16 +25,26 @@ export default {
             detail: false,
             exploitations: [],
             exploiTation: null,
-            responsive: 'hidden-sm-and-down'
-          
+            responsive: 'hidden-sm-and-down',
+            currentUser: null
+
         }
     },
 
     mounted() {
         this.getExploitations();
         this.initMap();
-        
+        authenticationService.currentUser.subscribe((x) => (this.currentUser = x));
 
+
+    },
+
+    computed: {
+        isClient() {
+            if (!_.isEmpty(this.currentUser)) {
+                return this.currentUser.role.name == "Client";
+            }
+        },
     },
 
     methods: {
@@ -81,7 +94,7 @@ export default {
                 const markerFeatures = layer.features.filter(feature => feature.type === 'marker');
                 markerFeatures.forEach((feature) => {
                     feature.leafletObject = L.marker(feature.coords)
-                    feature.leafletObject.addEventListener('click', function () { this.exploitation(feature.id)}, this);
+                    feature.leafletObject.addEventListener('click', function () { this.exploitation(feature.id) }, this);
                     var circle = L.circle(feature.coords, {
                         color: '#106b2f',
                         fillColor: 'green',
@@ -97,12 +110,12 @@ export default {
         },
 
         exploitation(id) {
-            let exploitIndex = _.findIndex(this.exploitations, {id: id});
+            let exploitIndex = _.findIndex(this.exploitations, { id: id });
             let exploitation = this.exploitations[exploitIndex];
             this.exploiTation = exploitation;
             this.drawer = !this.drawer
         },
 
-       
+
     }
 }

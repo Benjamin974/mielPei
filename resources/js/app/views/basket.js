@@ -1,4 +1,5 @@
 import { EventBus } from '../eventBus'
+import { authenticationService } from '../_services/authentication.service';
 import { basketServices } from '../_services/basketServices'
 export default {
     data() {
@@ -8,11 +9,12 @@ export default {
             itemBasket: [],
             id: [],
             quantite: [],
-            itemProduct: {}
+            itemProduct: {},
         }
     },
 
     created() {
+
         this.getBasket();
         EventBus.$on('basket', basket => {
             this.basket = basket

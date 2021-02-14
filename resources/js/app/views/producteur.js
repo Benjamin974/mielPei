@@ -1,12 +1,14 @@
 import FormProduct from "../components/producteur/FormProduct.vue"
 import Delete from '../components/producteur/Delete.vue'
 import Fiche from '../components/producteur/Fiche.vue'
+import Livraison from '../components/producteur/Livraison.vue'
 import { apiService } from "../_services/apiService"
 export default {
   components: {
     FormProduct,
     Delete,
-    Fiche
+    Fiche,
+    Livraison
   },
   data() {
     return {
@@ -26,6 +28,7 @@ export default {
         'quantite',
       ],
       products: [],
+      commandes: []
 
     }
   },
@@ -41,6 +44,7 @@ export default {
   created() {
     this.getProducteur();
     this.getProducts();
+    this.getProductsCommandes();
   },
 
   methods: {
@@ -50,13 +54,28 @@ export default {
       });
     },
 
+    getProductsCommandes() {
+      apiService.get('/api/producteur/' + this.$route.params.id + '/products/commande').then(({data}) => {
+        data.forEach(data => {
+          if(data.commandes_has_products.length != 0) {
+            data.commandes_has_products.forEach(commande => {
+              this.commandes.push(commande);
+
+            })
+          }
+        })
+      })
+    },
+
     getProducts() {
       apiService.get('/api/producteurs/products/' + this.$route.params.id).then(({ data }) => {
-        data.producteurs_has_products.forEach(products => {
+        data.data.forEach(products => {
           this.products.push(products);
         })
       })
     },
+
+ 
     update(product) {
       const index = _.findIndex(this.products, { id: product.id });
       this.products.splice(index, 1, product);
@@ -79,5 +98,6 @@ export default {
     updateItemsPerPage(number) {
       this.itemsPerPage = number
     },
+
   }
 }

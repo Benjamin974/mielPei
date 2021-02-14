@@ -1,11 +1,11 @@
 <template>
   <v-container class="fill-height">
     <v-row class="pa-15" align="center" justify="center">
-      <v-toolbar dark flat>
+      <v-toolbar color='orange lighten-4' flat>
         <v-toolbar-title>Identifiez-vous</v-toolbar-title>
         <v-spacer />
       </v-toolbar>
-      <v-card-text class="pa-15">
+      <v-card-text>
         <v-form ref="form" v-model="valid" :lazy-validation="lazy" class="pa-15 hidden-sm-and-down">
           <v-text-field
             label="Email de connexion"

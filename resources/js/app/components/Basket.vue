@@ -1,5 +1,5 @@
 <template>
-	<v-menu offset-y open-on-hover :close-on-content-click="false">
+	<v-menu offset-y open-on-hover :close-on-content-click="false" v-if='isClient'>
 		<template v-slot:activator="{ on }">
 			<v-btn v-on="on" icon>
 				<v-badge color="red" :value="quantite" :content="quantite">

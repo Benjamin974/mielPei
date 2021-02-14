@@ -26,14 +26,20 @@ Route::middleware('auth:api')->get('/exploitations', [ProductsController::class,
 Route::middleware('auth:api')->get('/producteur/{id}', [ProductsController::class, 'getProducteur'])->where('id', "[0-9]+");
 Route::middleware('auth:api')->get('/producteurs', [ProductsController::class, 'getProducteurs']);
 Route::middleware('auth:api')->get('/products', [ProductsController::class, 'getProducts']);
+Route::middleware('auth:api')->get('/popular-products', [ProductsController::class, 'popularProducts']);
 Route::middleware('auth:api')->post('/commander', [CommandesController::class, 'commander']);
+Route::middleware('auth:api')->get('/client/{id}/commandes', [CommandesController::class, 'getCommandes'])->where('id', "[0-9]+");
+Route::get('/commande/{id}/products', [CommandesController::class, 'getProductsCommandes'])->where('id', '[0-9]+');
 Route::post('/facture', [FacturesController::class, 'getFacture']);
 
-Route::middleware('auth:api')->get('/producteurs/products/{id}', [ProducteursController::class, 'getProducts'])->where('id', "[0-9]+");
+Route::get('/producteurs/products/{id}', [ProducteursController::class, 'getProducts'])->where('id', "[0-9]+");
 Route::middleware('auth:api')->post('/product/add-update', [ProducteursController::class, 'addUpdateProduct']);
 Route::middleware('auth:api')->post('/producteurs/products/delete/{id}', [ProducteursController::class, 'deleteProduct'])->where('id', "[0-9]+");
 Route::middleware('auth:api')->get('/producteur/fiche/{id}', [ProducteursController::class, 'getFiche'])->where('id', "[0-9]+");
 Route::middleware('auth:api')->post('/producteur/fiche/update', [ProducteursController::class, 'updateFiche']);
+Route::middleware('auth:api')->post('/producteur/product/livraison', [ProducteursController::class, 'addLivraison']);
+Route::middleware('auth:api')->get('/producteur/product/livraison/{id}', [ProducteursController::class, 'getLivraison'])->where('id', "[0-9]+");
+Route::get('/producteur/{id}/products/commande', [ProducteursController::class, 'getProductsCommande'])->where('id', "[0-9]+");
 
 Route::middleware('auth:api')->get('/users', [AdminController::class, 'getUsers']);
 Route::middleware('auth:api')->get('/roles', [AdminController::class, 'getRoles']);

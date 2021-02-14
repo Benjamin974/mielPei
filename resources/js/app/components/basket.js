@@ -1,10 +1,13 @@
 import { EventBus } from '../eventBus'
+import { authenticationService } from '../_services/authentication.service';
 import { basketServices } from '../_services/basketServices'
 export default {
     data() {
         return {
             quantite: 0,
             itemBasket: [],
+            currentUser: null
+
         }
     },
 
@@ -15,7 +18,17 @@ export default {
             this.itemBasket = [];
             this.quantite = 0;
         })
+        authenticationService.currentUser.subscribe((x) => (this.currentUser = x));
 
+
+    },
+
+    computed: {
+        isClient() {
+            if (!_.isEmpty(this.currentUser)) {
+                return this.currentUser.role.name == "Client";
+            }
+        },
     },
 
     methods: {
@@ -50,7 +63,7 @@ export default {
             }
         },
         updateQuantity(product) {
-            
+
             if (product.quantite == 0) {
                 if (confirm('êtes vous sur de vouloir supprimer ce produit ?')) {
                     basketServices.replaceQuantity(product)

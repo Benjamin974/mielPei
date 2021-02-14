@@ -15,8 +15,8 @@ class CommandesResource extends JsonResource
     public function toArray($request)
     {
         $user = new UsersResource($this->user);
-        $delivery = new AddressResource($this->delivery);
-        $billing = new AddressResource($this->billing);
+        $delivery = new AddressResource($this->deliveryAddress);
+        $billing = new AddressResource($this->billingAddress);
 
         return [
             'id' => $this->id,

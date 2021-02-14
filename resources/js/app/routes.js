@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Accueil from './views/Accueil.vue';
 import Producteurs from './views/Producteurs.vue';
 import Producteur from './views/Producteur.vue';
+import Historique from './views/HistoriqueClient.vue';
 import Products from './views/Products.vue';
 import Basket from './views/Basket.vue';
 import Confirm from './views/Stepper.vue';
@@ -61,6 +62,12 @@ const router = new VueRouter({
             name: 'dashboard',
             component: Dashboard,
             meta: { authorize: [Role.Admin] }
+        },
+        {
+            path: '/historique/:id',
+            name: 'historique',
+            component: Historique,
+            meta: { authorize: [Role.Client] }
         },
         {
             path: '/login',

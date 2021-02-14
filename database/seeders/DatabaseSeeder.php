@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             Products::class,
             Exploitations::class,
             Fiches::class,
+            StatusLivraisonSeeder::class
         ]);
     }
 }

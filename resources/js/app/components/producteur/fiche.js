@@ -26,7 +26,6 @@ export default {
     getEdit() {
       this.profession = this.fiche.profession;
       this.content = this.fiche.content;
-      console.log(this.profession);
 
     },
 

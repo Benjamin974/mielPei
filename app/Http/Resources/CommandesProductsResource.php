@@ -15,12 +15,13 @@ class CommandesProductsResource extends JsonResource
     public function toArray($request)
     {
         $product = new ProductsResource($this->product);
-
+        $commande = new CommandesResource($this->commande);
         return [
             'id' => $this->id,
             'quantite' => $this->quantite,
-            'id_commande' => $this->id_commande,
+            'commande' => $commande,
             'product' => $product,
+            'created_at' => $this->created_at
         ];
     }
 }
