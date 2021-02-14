@@ -175,7 +175,7 @@ class ProducteursController extends Controller
         $livraison = new Livraison();
         $livraison->id_product = $validator['id_product'];
         $livraison->id_commande = $validator['id_commande'];
-        $livraison->id_status = 1;
+        $livraison->id_status = 2;
         $livraison->save();
 
         return new LivraisonResource($livraison);

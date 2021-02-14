@@ -1,7 +1,7 @@
 <template>
   <v-container class="fill-height">
     <v-row class="pa-15" align="center" justify="center">
-      <v-toolbar color='orange lighten-4' flat>
+      <v-toolbar rounded="xl" color='orange lighten-4' flat>
         <v-toolbar-title>Identifiez-vous</v-toolbar-title>
         <v-spacer />
       </v-toolbar>

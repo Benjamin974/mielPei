@@ -1,5 +1,5 @@
 <template>
-	<v-container>
+	<v-container class="mb-10">
 		<h1 class="mb-10">Les utilisateurs</h1>
 
 		<v-row align="center">

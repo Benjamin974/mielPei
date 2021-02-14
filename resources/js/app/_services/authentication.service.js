@@ -39,10 +39,16 @@ function login(user) {
             } else if(data.message == 'login invalide') {
                 return data.message
             } else {
-                localStorage.setItem("currentUser", JSON.stringify(data.data));
-                currentUserSubject.next(data.data);
-                
-                return data.data;
+                if (data.message == undefined) {
+                    // store user details and jwt token in local storage to keep user logged in between page refreshes
+                    localStorage.setItem("currentUser", JSON.stringify(data.data));
+                    currentUserSubject.next(data.data);
+                    return data.data;
+    
+    
+                } else {
+                    return data.message;
+                }
             }
         });
 }

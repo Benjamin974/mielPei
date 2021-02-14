@@ -1,8 +1,8 @@
 <template>
 	<v-sheet
 		color="white"
-		elevation="1"
-		class="px-10 orange lighten-4 pb-2"
+		elevation="0"
+		class="px-10 orange lighten-4 pb-2 ma-3"
 		rounded="xl"
 	>
 		<v-row class="d-flex justify-space-around align-center">
