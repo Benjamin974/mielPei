@@ -44,4 +44,4 @@ Prendre les infos et remplir :
 - heroku run php artisan migrate:refresh --seed 
 
 
-LANCER http://secret-caverns-39341.herokuapp.com/
+LANCER https://secret-caverns-39341.herokuapp.com/
